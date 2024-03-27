@@ -3,6 +3,7 @@ import { getCurrentDate, getCurrentTime } from './utils.js'
 import { headers } from './config.js'
 import { isSignIn, signIn, getPointCount, freeCheck, drawAPI } from './config.api.js'
 import { sendEmail } from './sendEmail.js'
+import schedule from 'node-schedule'
 
 const message = {
     signStatus: '',   // 签到情况
@@ -38,12 +39,17 @@ async function toGetPointCount () {
 }
 
 async function checkIsFreeDraw () {
-    const res = await axios({
-        url: freeCheck,
-        method: 'get',
-        headers
+    return new Promise(resolve => {
+        // 延迟10s再查询 以防止签到没更新
+        setTimeout(async () => {
+            const res = await axios({
+                url: freeCheck,
+                method: 'get',
+                headers
+            })
+            resolve(res && res.data && res.data.data && res.data.data.free_count)
+        }, 10000)
     })
-    return res && res.data && res.data.data && res.data.data.free_count
 }
 
 async function toDraw () {
@@ -89,18 +95,28 @@ async function main () {
         console.log(`\n免费抽奖次数: ${times}`)
         console.log(`开始抽奖...`)
         const { lottery_name } = await toDraw()
-        console.log(`您获得${lottery_name}个矿石\n`)
-        message.drawStatus = `获奖结果：${lottery_name}个矿石`
+        console.log(`您获得${lottery_name}\n`)
+        message.drawStatus = `获奖结果：${lottery_name}\n`
     } else {
-        console.log(`\n免费抽奖次数已用完`)
+        console.log(`\n免费抽奖次数已用完\n`)
         message.drawStatus = '免费抽奖次数已用完'
     }
+    console.log(`-------------------------发送邮件通知-------------------------`)
     const emailResult = await toSendEmail()
     if (emailResult.messageId) {
-        console.log(`邮件发送成功, 邮件ID: ${emailResult.messageId}`)
+        console.log(`\n邮件发送成功, 邮件ID: ${emailResult.messageId}\n`)
     } else {
-        console.log(`邮件发送失败, 请检查邮箱配置`)
+        console.log(`\n邮件发送失败, 请检查邮箱配置\n`)
     }
 }
 
-main()
+const task = () => {
+    // 每天早上8点触发
+    const rule = new schedule.RecurrenceRule()
+    rule.hour = 8
+    rule.minute = 0
+    rule.second = 0
+    schedule.scheduleJob(rule, main)
+}
+
+task()
