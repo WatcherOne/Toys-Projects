@@ -1,0 +1,19 @@
+{
+  "name": "Node-Auto-Sign",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "prod": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "node-schedule": "^2.1.1",
+    "nodemailer": "^6.9.13"
+  }
+}
