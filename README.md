@@ -42,7 +42,7 @@
 1. 安装与更新
 
     - 安装：npm install pm2 -g
-    - 查看版本：pm2 -v
+    - 版本：pm2 -v
     - 更新：pm2 updated
 
 2. 常用命令
@@ -57,7 +57,7 @@
     - 重载所有进程：pm2 reload all
     - 删除应用进程：pm2 delete [name] / [ID]  // 通过应用名或应用ID删除指定应用
     - 删除所有进程：pm2 delete all
-    - 显示进程状态: pm2 list
+    - 显示进程状态：pm2 list
     - 查看进程日志：pm2 logs
     - 查看指定进程：pm2 logs [name] / [ID]
     - 查看进程信息：pm2 show [name] / [ID]
