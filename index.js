@@ -89,5 +89,4 @@ const task = () => {
     schedule.scheduleJob(rule, main)
 }
 
-// task()
-// main()
+task()

@@ -4,7 +4,7 @@ export const SENDER = {
     HOST: 'smtp.qq.com',
     PORT: 465,
     USER: '282739240@qq.com',  // 授权smtp邮箱地址
-    PASS: 'bkfrgxbxpiwsbhhc'   // 申请的授权码
+    PASS: ''    // 申请的授权码
 }
 
 export const RECIPIENT = {
