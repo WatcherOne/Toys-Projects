@@ -1,5 +1,108 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
 .wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    margin: 0 auto;
+    width: 780px;
+    box-sizing: border-box;
+}
+
+.wrapper .header {
+    min-height: 200px;
+    border: 1px solid #dedede;
+    box-sizing: border-box;
+}
+
+.wrapper .btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.wrapper .btns .description {
     display: flex;
     align-items: center;
-    justify-content: center;
+}
+
+.wrapper .btns .description #is-signed {
+    font-size: 16px;
+    color: chocolate;
+    margin-right: 5px;
+}
+
+.wrapper .btns .description #remained-point {
+    font-size: 18px;
+    color: rgb(62, 174, 211);
+}
+
+button+button {
+    margin-left: 5px;
+}
+
+.wrapper .process .content {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wrapper .process .content th {
+    padding: 5px;
+    font-size: 16px;
+    color: lightseagreen;
+}
+
+.wrapper .process .content td {
+    padding: 5px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.wrapper .logs {
+    width: 100%;
+    margin-top: 15px;
+    border: 1px solid #dedede;
+    box-sizing: border-box;
+}
+
+.wrapper .logs .log-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #222;
+    font-size: 16px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dedede;
+}
+
+.wrapper .logs .log-list {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.wrapper .logs .log-list .one-log {
+    display: flex;
+    font-size: 14px;
+    color: #767;
+    line-height: 24px;
+}
+
+.wrapper .logs .log-list .one-log .top {
+    min-width: 70px;
+}
+
+.wrapper .logs .log-list .one-log .error {
+    color: rgb(235, 124, 124);
+}
+
+.wrapper .logs .log-list .one-log .count {
+    color: rgb(62, 174, 211);
 }

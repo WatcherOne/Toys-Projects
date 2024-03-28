@@ -8,19 +8,29 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="header">dddd</div>
+        <div class="header"></div>
         <div class="btns">
-            <div class="btn">
+            <div class="description">
+                <div id="is-signed"></div>
+                <div id="remained-point"></div>
+            </div>
+            <div class="btn-groups">
                 <!-- Todo: 做个防抖  -->
                 <button type="button" id="start">开启</button>
                 <button type="button" id="stop">停止</button>
             </div>
         </div>
-        <div class="process" style="width:100px">
-            <div id="process-content"></div>
+        <div class="process">
+            <table id="process-content" class="content" border collapse></table>
         </div>
         <div class="logs">
-            <div id="log-list"></div>
+            <div class="log-top">
+                <div class="title">日志列表</div>
+                <div class="operate">
+                    <button type="button" id="update-log">更新</button>
+                </div>
+            </div>
+            <div id="log-list" class="log-list"></div>
         </div>
     </div>
 </body>
