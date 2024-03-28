@@ -26,8 +26,9 @@
         })
     }
 
+    const $processDom = document.getElementById('process-content')
     function handleProcess (data) {
-        console.log('process: ', data)
+        $processDom.innerHTML = data.data
     }
 
     function getLogs () {
@@ -40,7 +41,32 @@
     }
 
     function handleLogs (data) {
-        console.log('logs: ', data)
+        try {
+            const result = (data.data || '').split('@')
+            let logList = []
+            result.forEach(item => {
+                // 去掉 \n
+                const str = item.replace('\n', '')
+                const obj = str ? JSON.parse(str) : {}
+                str && logList.push(obj)
+            })
+            appendLogToHtml(logList)
+        } catch (error) {
+            console.log('error: ', error)
+        }
+    }
+
+    const $logListDom = document.getElementById('log-list')
+    function appendLogToHtml (list) {
+        list.forEach(item => {
+            const { currentTime, remainedPoint } = item
+            const $div = document.createElement('div')
+            $div.innerHTML = `
+                <div>${currentTime}</div>
+                <div>${remainedPoint}</div>
+            `
+            $logListDom.appendChild($div)
+        })
     }
 
     init()
