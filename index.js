@@ -1,113 +1,86 @@
-import axios from 'axios'
+import fs from 'fs'
 import { getCurrentDate, getCurrentTime } from './utils.js'
-import { headers } from './config.js'
-import { isSignIn, signIn, getPointCount, freeCheck, drawAPI } from './config.api.js'
+import { COOKIE } from './config.js'
+import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from './api.js'
 import { sendEmail } from './sendEmail.js'
 import schedule from 'node-schedule'
 
-const message = {
+const EMAIL_MSG = {
     signStatus: '',   // 签到情况
     pointCount: 0,    // 当前矿石数量
     drawStatus: ''    // 抽奖情况
 }
-
-async function checkIsSignedIn () {
-    const res = await axios({
-        url: isSignIn,
-        method: 'get',
-        headers
-    })
-    return res && res.data
+const LOG_MSG = {
+    currentTime: '',   // 当前时间
+    signStatus: null,  // 是否签到标识: true: 已签到  false: 未签到
+    signResult: null,  // 签到结果：true: 签到成功，false: 签到失败，其它签到失败原因 
+    remainedPoint: 0,  // 剩余矿石数
+    freeDrawTimes: 0,  // 免费抽奖次数
+    drawResult: null,  // 抽奖结果
+    emailStatus: null  // 邮件发送状态：true: 发送成功，false: 发送失败
 }
 
-async function toSignIn () {
-    const res = await axios({
-        url: signIn,
-        method: 'post',
-        headers
-    })
-    return res && res.data
-}
-
-async function toGetPointCount () {
-    const res = await axios({
-        url: getPointCount,
-        method: 'get',
-        headers
-    })
-    return res && res.data && res.data.data
-}
-
-async function checkIsFreeDraw () {
+// 延迟去获取免费抽奖次数
+async function queryFreeTimes () {
     return new Promise(resolve => {
         // 延迟10s再查询 以防止签到没更新
         setTimeout(async () => {
-            const res = await axios({
-                url: freeCheck,
-                method: 'get',
-                headers
-            })
-            resolve(res && res.data && res.data.data && res.data.data.free_count)
+            resolve(await checkIsFreeDraw())
         }, 10000)
     })
 }
 
-async function toDraw () {
-    const res = await axios({
-        url: drawAPI,
-        method: 'post',
-        headers
-    })
-    return res && res.data && res.data.data
+function handleEmailMessage () {
+    const { signStatus, pointCount, drawStatus } = EMAIL_MSG
+    return `当前日期: ${getCurrentDate()} ${getCurrentTime()}\n签到情况: ${signStatus}\n矿石数: ${pointCount}\n抽奖情况: ${drawStatus}`
 }
 
-async function toSendEmail () {
-    const { signStatus, pointCount, drawStatus } = message
-    const msg = `当前日期: ${getCurrentDate()} ${getCurrentTime()}\n签到情况: ${signStatus}\n矿石数: ${pointCount}\n抽奖情况: ${drawStatus}`
-    return await sendEmail()
+async function toLog (msg) {
+    const logMsg = msg || JSON.stringify(LOG_MSG)
+    try {
+        fs.appendFileSync('./logs.txt', `${logMsg}@\n`)
+    } catch (err) {
+        console.log(`日志写入失败: ${err}`)
+    }
 }
 
 async function main () {
-    console.log(`\n\n---------------------${getCurrentDate()} ${getCurrentTime()}---------------------\n`)
-    console.log(`-------------------------是否已签到-------------------------`)
+    LOG_MSG.currentTime = `${getCurrentDate()} ${getCurrentTime()}`
+    if (!COOKIE) {
+        await toLog('用户不存在，脚本执行失败')
+        return
+    }
     const isSignedObj = await checkIsSignedIn()
     if (isSignedObj.data) {
-        console.log(`\n今日已签到\n`)
-        message.signStatus = '今日已签到'
+        LOG_MSG.signStatus = true
+        EMAIL_MSG.signStatus = '今日已签到'
     } else {
-        console.log(`\n正在签到...`)
         const signStatusObj = await toSignIn()
         if (signStatusObj.data) {
-            console.log(`签到成功\n`)
-            message.signStatus = '签到成功'
+            LOG_MSG.signResult = 'true'
+            EMAIL_MSG.signStatus = '签到成功'
         } else {
-            console.log(`${signStatusObj.err_msg}\n`)
-            message.signStatus = signStatusObj.err_msg || '签到失败'
+            LOG_MSG.signResult = signStatusObj.err_msg || 'false'
+            EMAIL_MSG.signStatus = signStatusObj.err_msg || '签到失败'
+            return false
         }
     }
-    console.log(`-------------------------当前矿石数-------------------------`)
     const count = await toGetPointCount()
-    console.log(`\n矿石数: ${count}\n`)
-    message.pointCount = count || 0
-    console.log(`-------------------------免费抽奖次数-------------------------`)
-    const times = await checkIsFreeDraw()
+    LOG_MSG.remainedPoint = count || 0
+    EMAIL_MSG.pointCount = count || 0
+    const times = await queryFreeTimes()
     if (times) {
-        console.log(`\n免费抽奖次数: ${times}`)
-        console.log(`开始抽奖...`)
+        LOG_MSG.freeDrawTimes = times
         const { lottery_name } = await toDraw()
-        console.log(`您获得${lottery_name}\n`)
-        message.drawStatus = `获奖结果：${lottery_name}\n`
+        LOG_MSG.drawResult = lottery_name
+        EMAIL_MSG.drawStatus = `获奖结果：${lottery_name}\n`
     } else {
-        console.log(`\n免费抽奖次数已用完\n`)
-        message.drawStatus = '免费抽奖次数已用完'
+        LOG_MSG.freeDrawTimes = 0
+        EMAIL_MSG.drawStatus = '今日免费抽奖次数已用完'
     }
-    console.log(`-------------------------发送邮件通知-------------------------`)
-    const emailResult = await toSendEmail()
-    if (emailResult.messageId) {
-        console.log(`\n邮件发送成功, 邮件ID: ${emailResult.messageId}\n`)
-    } else {
-        console.log(`\n邮件发送失败, 请检查邮箱配置\n`)
-    }
+    const emailResult = await sendEmail(handleEmailMessage())
+    LOG_MSG.emailStatus = emailResult.messageId ? true : falseemailStatus = false
+    toLog()
 }
 
 const task = () => {
