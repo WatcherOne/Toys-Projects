@@ -16,6 +16,26 @@
             console.log(res)
         })
     }
+
+    document.getElementById('start').addEventListener('click', startScript)
+    function startScript () {
+        fetch('/api/start', {
+            method: 'GET',
+            headers: HEADERS
+        }).then(res =>  res.json()).then(data => {
+            console.log(data)
+        })
+    }
+
+    document.getElementById('stop').addEventListener('click', stopScript)
+    function stopScript () {
+        fetch('/api/stop', {
+            method: 'GET',
+            headers: HEADERS
+        }).then(res =>  res.json()).then(data => {
+            console.log(data)
+        })
+    }
     
     function getProcess () {
         fetch('/api/getProcess', {

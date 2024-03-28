@@ -14,6 +14,10 @@ export default async (req) => {
         return getLogs(req)
     } else if (url === '/api/getCommon') {
         return getCommon(req)
+    } else if (url === '/api/stop') {
+        return stopScript(req)
+    } else if (url === '/api/start') {
+        return startScript(req)
     }
 }
 
@@ -34,8 +38,58 @@ export const setCookie = async (req) => {
     })
 }
 
+// 初始化获取数据
+export const getCommon = async (req) => {
+    const { data: isSigned } = await checkIsSignedIn() || {}
+    const remianedPoint = await toGetPointCount()
+    return JSON.stringify({ code: 200, data: { isSigned, remianedPoint } })
+}
+
+// 启动脚本
+export const startScript = async () => {
+    return new Promise(resolve => {
+        exec('pm2 show autoSignScript', (error, stdout, stderr) => {
+            if (error) {
+                const { killed } = error
+                if (killed) {
+                    resolve(JSON.stringify({ code: 500, data: stderr }))
+                } else {
+                    exec('pm2 start index.js --name autoSignScript', (error2, stdout2, stderr2) => {
+                        if (error2) {
+                            resolve(JSON.stringify({ code: 500, data: stderr2 }))
+                        } else {
+                            resolve(JSON.stringify({ code: 200, data: '启动成功' }))
+                        }
+                    })
+                }
+            } else {
+                resolve(JSON.stringify({ code: 500, data: '脚本已开启，请停止后再开启' }))
+            }
+        })
+    })
+}
+
+// 停止脚本
+export const stopScript = async () => {
+    return new Promise(resolve => {
+        exec('pm2 show autoSignScript', (error, stdout, stderr) => {
+            if (error) {
+                resolve(JSON.stringify({ code: 500, data: '脚本未启动' }))
+            } else {
+                exec('pm2 delete autoSignScript', (error2, stdout2, stderr2) => {
+                    if (error2) {
+                        resolve(JSON.stringify({ code: 500, data: stderr2 }))
+                    } else {
+                        resolve(JSON.stringify({ code: 200, data: '停止成功' }))
+                    }
+                })
+            }
+        })
+    })
+}
+
 // 获得进程列表
-export const getProcess = async (req) => {
+export const getProcess = async () => {
     return new Promise(resolve => {
         exec('pm2 list', (error, stdout, stderr) => {
             if (error) {
@@ -58,11 +112,4 @@ export const getLogs = async (req) => {
             resolve(JSON.stringify({ code: 500, data: err }))
         })
     })
-}
-
-// 初始化获取数据
-export const getCommon = async (req) => {
-    const { data: isSigned } = await checkIsSignedIn() || {}
-    const remianedPoint = await toGetPointCount()
-    return JSON.stringify({ code: 200, data: { isSigned, remianedPoint } })
 }
