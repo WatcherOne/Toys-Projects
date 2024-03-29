@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { getCurrentDate, getCurrentTime } from './utils.js'
 import { COOKIE } from './config.js'
+import { hour, minute, second } from './config.date.js'
 import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from './api.js'
 import { sendEmail } from './sendEmail.js'
 import schedule from 'node-schedule'
@@ -83,9 +84,9 @@ async function main () {
 const task = () => {
     // 每天早上8点触发
     const rule = new schedule.RecurrenceRule()
-    rule.hour = 8
-    rule.minute = 0
-    rule.second = 0
+    rule.hour = hour
+    rule.minute = minute
+    rule.second = second
     schedule.scheduleJob(rule, main)
 }
 

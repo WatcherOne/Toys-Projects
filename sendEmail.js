@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { SENDER, RECIPIENT } from './config.email'
+import { SENDER, RECIPIENT } from './config.email.js'
 
 const transporter = nodemailer.createTransport({
     host: SENDER.HOST,
