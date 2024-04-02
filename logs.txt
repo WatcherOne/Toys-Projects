@@ -1,4 +1,0 @@
-{"currentTime":"2024/3/28 14:19:00","signStatus":true,"signResult":"true","remainedPoint":12575,"freeDrawTimes":0,"drawResult":"","emailStatus":true}@
-{"currentTime":"2024/3/28 14:19:24","signStatus":true,"signResult":"true","remainedPoint":12575,"freeDrawTimes":0,"drawResult":"","emailStatus":true}@
-{"currentTime":"2024/3/28 14:24:17","signStatus":true,"signResult":null,"remainedPoint":12575,"freeDrawTimes":0,"drawResult":null,"emailStatus":true}@
-{"currentTime":"2024/3/28 14:24:17","error":"登陆已过期"}@

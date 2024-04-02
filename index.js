@@ -1,6 +1,5 @@
 import fs from 'fs'
-import { getCurrentDate, getCurrentTime } from './utils.js'
-import { COOKIE } from './config.js'
+import { getCurrentDate, getCurrentTime } from '../utils/common.js'
 import { hour, minute, second } from './config.date.js'
 import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from './api.js'
 import { sendEmail } from './sendEmail.js'
@@ -21,6 +20,9 @@ const LOG_MSG = {
     emailStatus: null, // 邮件发送状态：true: 发送成功，false: 发送失败
     error: null        // 错误信息
 }
+
+const username = process.argv[2]
+console.log('username:', username)
 
 // 延迟去获取免费抽奖次数
 async function queryFreeTimes () {
@@ -90,6 +92,6 @@ const task = () => {
     schedule.scheduleJob(rule, main)
 }
 
-console.log('环境变量:', process.argv)
+console.log('环境变量:')
 console.log('开启成功')
 // task()

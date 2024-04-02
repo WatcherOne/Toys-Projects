@@ -24,7 +24,7 @@ export const startScript = async (req) => {
                     // 其他错误时
                     resolve(returnMsg(stderr, null, 500))
                 } else {
-                    exec(`pm2 start index.js --node-args="zhubo" --name ${commandName}`, (error2, stdout2, stderr2) => {
+                    exec(`pm2 start index.js --name ${commandName} -- zhubo`, (error2, stdout2, stderr2) => {
                         if (error2) {
                             resolve(returnMsg(stderr2, null, 500))
                         } else {
