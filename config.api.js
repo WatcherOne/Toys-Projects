@@ -8,3 +8,5 @@ export const freeCheck = 'https://api.juejin.cn/growth_api/v1/lottery_config/get
 export const drawAPI = 'https://api.juejin.cn/growth_api/v1/lottery/draw'
 // 获得矿石数量
 export const getPointCount = 'https://api.juejin.cn/growth_api/v1/get_cur_point'
+// 获得掘金活动
+export const getActivityAPI = 'https://api.juejin.cn/study_api/v1/competition/competition_list'

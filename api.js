@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { HEADERS } from './config.default.js'
 import { COOKIE } from './config.js'
-import { isSignIn, signIn, getPointCount, freeCheck, drawAPI } from './config.api.js'
+import { isSignIn, signIn, getPointCount, freeCheck, drawAPI, getActivityAPI } from './config.api.js'
 
 const headers = { ...HEADERS, cookie: COOKIE }
 
@@ -56,5 +56,18 @@ export async function toDraw () {
         headers
     })
     // { lottery_name } 抽奖结果
+    return res && res.data && res.data.data
+}
+
+// 获得活动list
+export async function toGetActivity () {
+    const res = await axios({
+        url: getActivityAPI,
+        method: 'post',
+        data: {
+            time_segments: ['running_competitions', 'history_competitions']
+        },
+        headers: HEADERS
+    })
     return res && res.data && res.data.data
 }

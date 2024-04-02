@@ -2,7 +2,7 @@ import http from 'http'
 import path from 'path'
 // import { fileURLToPath } from 'url'
 import { readFile } from 'fs/promises'
-import handleAPI from './serverAPI.js'
+import handleRouter from './router/index.js'
 
 // const __filename = fileURLToPath(import.meta.url)
 // const __dirname = path.dirname(__filename)
@@ -13,22 +13,38 @@ const __dirname = path.resolve()
 http.createServer(async (req, res) => {
     const { url } = req
     console.log(`当前请求接口: ${url}----------------------------------------`)
-    if (url.endsWith('.css')) {
-        const data = await readFile(`${__dirname}/public${url}`)
-        res.end(data || '404')
-    } else if (url.endsWith('.js')) {
-        const data = await readFile(`${__dirname}/public${url}`)
-        res.end(data || '404')
-    } else if (url.startsWith('/api')) {
-        const data = await handleAPI(req)
+
+    if (url.startsWith('/api')) {
+        const data = await handleRouter(req, res)
         res.writeHead(200, { 'Content-Type': 'application/json' })
-        res.end(data || JSON.stringify({ code: 404, msg: '404' }))
+        res.end(data)
     } else {
-        res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
-        const data = await readFile(`${__dirname}/public/index.html`)
-        res.end(data || '404')
+        const extname = path.extname(url)
+        let contentType = 'text/html'
+        switch (extname) {
+            case '.js': contentType = 'text/javascript'; break;
+            case '.css': contentType = 'text/css'; break;
+            case '.json': contentType = 'application/json'; break;
+            case '.png': contentType = 'image/png'; break;
+            case '.jpg':
+            case '.jpeg': contentType = 'image/jpeg'; break;
+            // '.ico' Todo: /favicon.ico
+        }
+        readFile(`${__dirname}/public${url}`).then(content => {
+            res.writeHead(200, { 'Content-Type': contentType })
+            res.end(content, 'utf-8')
+        }).catch(err => {
+            if (url === '/') {
+                readFile(`${__dirname}/public/index.html`).then(content => {
+                    res.writeHead(200, { 'Content-Type': contentType })
+                    res.end(content, 'utf-8')
+                })
+            } else {
+                res.writeHead(500)
+                res.end(`Server Error ${err.code}`)
+            }
+        })
     }
-    // Todo:   /favicon.ico
 }).listen(6600)
 
 console.log(`服务启动成功\nlocal: http://localhost:6600/`)

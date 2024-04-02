@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises'
 import { exec } from 'child_process'
-import { checkIsSignedIn, toGetPointCount } from './api.js'
+import { checkIsSignedIn, toGetPointCount, toGetActivity } from './api.js'
 
 export default async (req) => {
     // 因为 post 请求参数存在请求体里，直接用 req.body 获取不到，需要用到 body-parser
@@ -18,6 +18,8 @@ export default async (req) => {
         return stopScript(req)
     } else if (url === '/api/start') {
         return startScript(req)
+    } else if (url === '/api/getActivity') {
+        return getActivity(req)
     }
 }
 
@@ -39,7 +41,7 @@ export const setCookie = async (req) => {
 }
 
 // 初始化获取数据
-export const getCommon = async (req) => {
+export const getCommon = async () => {
     const { data: isSigned } = await checkIsSignedIn() || {}
     const remianedPoint = await toGetPointCount()
     return JSON.stringify({ code: 200, data: { isSigned, remianedPoint } })
@@ -104,7 +106,7 @@ export const getProcess = async () => {
 }
 
 // 获得日志文件内容
-export const getLogs = async (req) => {
+export const getLogs = async () => {
     return new Promise(resolve => {
         readFile('./logs.txt', 'utf-8').then(data => {
             resolve(JSON.stringify({ code: 200, data }))
@@ -112,4 +114,10 @@ export const getLogs = async (req) => {
             resolve(JSON.stringify({ code: 500, data: err }))
         })
     })
+}
+
+// 获得活动显示
+export const getActivity = async () => {
+    const data = await toGetActivity() || {}
+    return JSON.stringify({ code: 200, data })
 }

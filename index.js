@@ -90,4 +90,6 @@ const task = () => {
     schedule.scheduleJob(rule, main)
 }
 
-task()
+console.log('环境变量:', process.argv)
+console.log('开启成功')
+// task()

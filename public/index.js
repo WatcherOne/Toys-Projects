@@ -1,36 +1,59 @@
 ;(function () {
 
+    const cookie = window.cookie
+    console.log(cookie)
+
+    const CODE = {
+        SUCCESS: 200,
+        NOTFOUND: 400,
+        NOTLOGIN: 403
+    }
+
     // 静态变量
     const HEADERS = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
     }
 
     function init () {
-        fetch('/api/getCommon', {
+        getInfo()
+        getLogs()
+    }
+
+    function getInfo () {
+        fetch('/api/getInfo', {
             method: 'GET',
             headers: HEADERS,
+            credentials: 'include'
         }).then(res => res.json()).then(res => {
             const { code, data } = res
-            if (code === 200) {
+            if (code === CODE.SUCCESS) {
                 // 是否签到 & 剩余矿石数
                 const { isSigned, remianedPoint } = data || {}
                 const msg = isSigned === true ? '今日已签到' : (isSigned === false ? '今日未签到' : '登陆已过期')
                 document.getElementById('is-signed').innerHTML = msg
                 document.getElementById('remained-point').innerHTML = remianedPoint || 0
+            } else if (code === CODE.NOTLOGIN) {
+                toLogin()
             }
         })
     }
 
+    function toLogin () {
+        document.cookie = ''
+        window.location.replace('/login.html')
+    }
+
     document.getElementById('start').addEventListener('click', startScript)
     function startScript () {
-        fetch('/api/start', {
+        fetch('/api/startScript', {
             method: 'GET',
-            headers: HEADERS
+            headers: HEADERS,
+            credentials: 'include'
         }).then(res =>  res.json()).then(res => {
             const { code, data } = res
             if (code === 200) {
                 alert('启动成功')
-                getProcess()
+                // getProcess()
             } else {
                 alert(data)
             }
@@ -87,11 +110,12 @@
         $processDom.innerHTML = tr
     }
 
-    document.getElementById('update-log').addEventListener('click', getLogs)
+    document.getElementById('update-log').addEventListener('click', getActivity)
     function getLogs () {
         fetch('/api/getLogs', {
             method: 'GET',
-            headers: HEADERS
+            headers: HEADERS,
+            credentials: 'include'
         }).then(res => res.json()).then(data => {
             handleLogs(data)
         })
@@ -111,17 +135,6 @@
         } catch (error) {
             console.log('error: ', error)
         }
-    }
-
-    const LOG_MSG = {
-        currentTime: '',   // 当前时间
-        signStatus: null,  // 是否签到标识: true: 已签到  false: 未签到
-        signResult: null,  // 签到结果：true: 签到成功，false: 签到失败，其它签到失败原因 
-        remainedPoint: 0,  // 剩余矿石数
-        freeDrawTimes: 0,  // 免费抽奖次数
-        drawResult: null,  // 抽奖结果
-        emailStatus: null, // 邮件发送状态：true: 发送成功，false: 发送失败
-        error: null        // 错误信息
     }
 
     const $logListDom = document.getElementById('log-list')
@@ -159,9 +172,17 @@
         }
     }
 
+    function getActivity () {
+        fetch('/api/getActivity', {
+            method: 'POST',
+            headers: HEADERS
+        }).then(res => res.json()).then(res => {
+            console.log(res)
+        })
+    }
+
     init()
-    getProcess()
-    getLogs()
+    // getProcess()
 })()
 
 // fetch('/api/setCookie', {

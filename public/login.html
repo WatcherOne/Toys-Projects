@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动签到脚本登录</title>
+    <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="username form-text">
+            <input type="text" value="zhubo" id="username" class="input input-username" maxlength="10" placeholder="请输入账号名, 只能输入英文与数字" />
+        </div>
+        <div class="password form-text">
+            <textarea id="password" rows="10" class="input input-password" placeholder="请输入登录第三方Cookie中的Token">dakjhbdjagdjasghdj</textarea>
+        </div>
+        <div class="email form-text">
+            <input type="email" value="286154@qq.com" id="email" class="input input-email" placeholder="请输入邮件, 用于发送邮件通知" />
+        </div>
+        <div class="operate-btn">
+            <button type="button" id="login" class="login-btn">
+                <span id="loading-text" class="login-text">登 录</span>
+                <span id="loading" class="four-balls hide"></span>
+            </button>
+        </div>
+        <div class="login-tip">暂不支持账号登录: 自动登录第三方网站可能违反使用条款, 使用时需要确保符合相关法律法规和网站政策</div>
+    </div>
+    <div class="copyright">
+        Copyright © 2024 watcher. All Rights Reserved.
+    </div>
+</body>
+<script src="./login.js"></script>
+</html>
