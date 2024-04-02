@@ -1,16 +1,18 @@
 ;(function () {
     window.onload = () => {
+
         const $username = document.getElementById('username')
         const $password = document.getElementById('password')
         const $loginBtn = document.getElementById('login')
-        const $emailBtn = document.getElementById('email')
+        const $email = document.getElementById('email')
 
         $loginBtn.addEventListener('click', submit)
 
-        function submit () {
+        function submit (e) {
+            e.preventDefault()
             const username = $username.value.trim()
             const password = $password.value.trim()
-            const email = $emailBtn.value.trim()
+            const email = $email.value.trim()
             if (!username) {
                 alert('账号名不可为空')
                 return
@@ -20,7 +22,7 @@
                 return
             }
             if (!password) {
-                alert('Token不可为空')
+                alert('密码不可为空')
                 return
             }
             setLoading()
@@ -35,7 +37,12 @@
                 body: data
             }).then(res => res.json()).then(res => {
                 const { code, msg } = res
-                code === 200 ? window.location.replace('/') : alert(msg)
+                if (code === 200) {
+                    localStorage.setItem('watcher-auto-sign', username)
+                    location.replace('/')
+                } else {
+                    alert(msg)
+                }
             }).catch(err => {
                 alert(err)
             }).finally(() => {

@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { HEADERS } from './config.js'
-import { COOKIE } from '../utils/cookie.js'
 import { isSignedIn, signIn, getPointCount, freeCheck, drawAPI, getActivityAPI } from './juejin.api.js'
 
-const headers = { ...HEADERS, cookie: COOKIE }
+const headers = { ...HEADERS, cookie: '' }
 
 // 检测是否已签到
 export async function checkIsSignedIn (cookie) {

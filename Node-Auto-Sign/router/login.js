@@ -1,7 +1,7 @@
 import path from 'path'
 import userList from '../config/token.js'
 import { writeFileSync } from 'fs'
-import { returnMsg } from '../utils/common.js'
+import { checkUserIsExist, returnMsg } from '../utils/common.js'
 
 const __dirname = path.resolve()
 
@@ -16,19 +16,24 @@ export const login = async (req, res) => {
         req.on('end', async () => {
             const { username, password } = loginForm
             if (!username || !password) {
-                resolve(returnMsg('账号名或Token不可为空', null, 500))
+                resolve(returnMsg('账号名或密码不可为空', null, 500))
                 return
             }
             if (!/^[A-Za-z0-9]+$/.test(username)) {
                 resolve(returnMsg('账号名只能包含英文与数字', null, 500))
                 return
             }
+            const userInfo = checkUserIsExist(username)
+            if (userInfo && userInfo.password !== password) {
+                resolve(returnMsg('密码不正确', null, 500))
+                return
+            }
             const fileName = `${__dirname}/config/token.js`
-            const { info: fileContent, randomToken } = handleLoginInfo(loginForm)
+            const { info: fileContent, watcherToken } = handleLoginInfo(loginForm)
             await writeFileSync(fileName, fileContent)
             res.setHeader('Access-Control-Allow-Credentials', 'true')
-            res.setHeader('Set-Cookie', [`username=${username}`, `watcherToken=${randomToken}`])
-            // 用户名已存在时 => 会替换Token
+            res.setHeader('Set-Cookie', [`username=${username}`, `watcherToken=${watcherToken}`])
+            // 用户名已存在时 => 会替换
             resolve(returnMsg())
         })
     })
@@ -36,11 +41,11 @@ export const login = async (req, res) => {
 
 function handleLoginInfo (obj) {
     const { username, password, email } = obj
-    const randomToken = randomNumber(11)
-    userList[username] = { username, token: password, email, watcherToken: randomToken }
+    const watcherToken = randomNumber(11)
+    userList[username] = { username, password, email, watcherToken: watcherToken }
     return {
         info: `export default ${JSON.stringify(userList)}`,
-        randomToken
+        watcherToken
     }
 }
 

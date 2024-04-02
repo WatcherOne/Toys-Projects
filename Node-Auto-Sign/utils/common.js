@@ -7,6 +7,7 @@ export const returnMsg = (msg = '成功', data = null, code = 200) => {
 
 // 获得 Cookie
 export const getCookie = (cookieStr) => {
+    if (!cookieStr) return {}
     let cookie = {}
     cookieStr.split(';').forEach(item => {
         if (!item) {
@@ -18,6 +19,11 @@ export const getCookie = (cookieStr) => {
         cookie[key] = val
     })
     return { username: cookie.username, watcherToken: cookie.watcherToken }
+}
+
+// 验证用户是否存在
+export const checkUserIsExist = (username) => {
+    return userList[username]
 }
 
 // 获得当前用户信息

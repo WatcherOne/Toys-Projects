@@ -8,18 +8,19 @@
 </head>
 <body>
     <div class="login-wrapper">
-        <div class="username form-text">
-            <input type="text" value="zhubo" id="username" class="input input-username" maxlength="10" placeholder="请输入账号名, 只能输入英文与数字" />
+        <div class="username form-text form-user">
+            <input type="text" id="username" class="input input-username" maxlength="10" placeholder="请输入账号名, 只能输入英文与数字" />
+            <div class="user-tips">若密码不正确, 表示该账号已存在, 请确认密码或新建账号</div>
         </div>
         <div class="password form-text">
-            <textarea id="password" rows="10" class="input input-password" placeholder="请输入登录第三方Cookie中的Token">dakjhbdjagdjasghdj</textarea>
+            <input type="password" id="password" class="input input-password" placeholder="请输入账号密码" />
         </div>
         <div class="email form-text">
-            <input type="email" value="286154@qq.com" id="email" class="input input-email" placeholder="请输入邮件, 用于发送邮件通知" />
+            <input type="email" id="email" class="input input-email" placeholder="请输入邮件, 用于发送邮件通知" />
         </div>
         <div class="operate-btn">
             <button type="button" id="login" class="login-btn">
-                <span id="loading-text" class="login-text">登 录</span>
+                <span id="loading-text" class="login-text">登 录 / 注 册</span>
                 <span id="loading" class="four-balls hide"></span>
             </button>
         </div>

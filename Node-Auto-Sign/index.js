@@ -1,97 +1,51 @@
-import fs from 'fs'
-import { getCurrentDate, getCurrentTime } from '../utils/common.js'
-import { hour, minute, second } from './config.date.js'
-import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from './api.js'
-import { sendEmail } from './sendEmail.js'
-import schedule from 'node-schedule'
+import http from 'http'
+import path from 'path'
+// import { fileURLToPath } from 'url'
+import { readFile } from 'fs/promises'
+import handleRouter from './router/index.js'
 
-const EMAIL_MSG = {
-    signStatus: '',   // 签到情况
-    pointCount: 0,    // 当前矿石数量
-    drawStatus: ''    // 抽奖情况
-}
-const LOG_MSG = {
-    currentTime: '',   // 当前时间
-    signStatus: null,  // 是否签到标识: true: 已签到  false: 未签到
-    signResult: null,  // 签到结果：true: 签到成功，false: 签到失败，其它签到失败原因 
-    remainedPoint: 0,  // 剩余矿石数
-    freeDrawTimes: 0,  // 免费抽奖次数
-    drawResult: null,  // 抽奖结果
-    emailStatus: null, // 邮件发送状态：true: 发送成功，false: 发送失败
-    error: null        // 错误信息
-}
+// const __filename = fileURLToPath(import.meta.url)
+// const __dirname = path.dirname(__filename)
 
-const username = process.argv[2]
-console.log('username:', username)
+// 得到的是运行目录，并不是该文件的所在目录
+const __dirname = path.resolve()
 
-// 延迟去获取免费抽奖次数
-async function queryFreeTimes () {
-    return new Promise(resolve => {
-        // 延迟10s再查询 以防止签到没更新
-        setTimeout(async () => {
-            resolve(await checkIsFreeDraw())
-        }, 10000)
-    })
-}
-
-function handleEmailMessage () {
-    const { signStatus, pointCount, drawStatus } = EMAIL_MSG
-    return `当前日期: ${getCurrentDate()} ${getCurrentTime()}\n签到情况: ${signStatus}\n矿石数: ${pointCount}\n抽奖情况: ${drawStatus}`
-}
-
-async function toLog () {
-    fs.appendFileSync('./logs.txt', `${JSON.stringify(LOG_MSG)}@\n`)
-}
-
-async function main () {
-    LOG_MSG.currentTime = `${getCurrentDate()} ${getCurrentTime()}`
-    if (!COOKIE) {
-        LOG_MSG.error = '用户不存在，脚本执行失败'
-        await toLog()
-        return
-    }
-    const isSignedObj = await checkIsSignedIn()
-    if (isSignedObj.data) {
-        LOG_MSG.signStatus = true
-        EMAIL_MSG.signStatus = '今日已签到'
+http.createServer(async (req, res) => {
+    const { url } = req
+    console.log(`当前请求接口: ${url}----------------------------------------`)
+    // 接口地址
+    if (url.startsWith('/api')) {
+        const data = await handleRouter(req, res)
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        res.end(data)
     } else {
-        const signStatusObj = await toSignIn()
-        if (signStatusObj.data) {
-            LOG_MSG.signResult = 'true'
-            EMAIL_MSG.signStatus = '签到成功'
-        } else {
-            LOG_MSG.signResult = signStatusObj.err_msg || 'false'
-            EMAIL_MSG.signStatus = signStatusObj.err_msg || '签到失败'
-            return false
+        // 资源地址
+        const extname = path.extname(url)
+        let contentType = 'text/html'
+        switch (extname) {
+            case '.js': contentType = 'text/javascript'; break;
+            case '.css': contentType = 'text/css'; break;
+            case '.json': contentType = 'application/json'; break;
+            case '.png': contentType = 'image/png'; break;
+            case '.jpg':
+            case '.jpeg': contentType = 'image/jpeg'; break;
+            // '.ico' Todo: /favicon.ico
         }
+        readFile(`${__dirname}/public${url}`).then(content => {
+            res.writeHead(200, { 'Content-Type': contentType })
+            res.end(content, 'utf-8')
+        }).catch(err => {
+            if (url === '/') {
+                readFile(`${__dirname}/public/index.html`).then(content => {
+                    res.writeHead(200, { 'Content-Type': contentType })
+                    res.end(content, 'utf-8')
+                })
+            } else {
+                res.writeHead(500)
+                res.end(`Server Error ${err.code}`)
+            }
+        })
     }
-    const count = await toGetPointCount()
-    LOG_MSG.remainedPoint = count || 0
-    EMAIL_MSG.pointCount = count || 0
-    const times = await queryFreeTimes()
-    if (times) {
-        LOG_MSG.freeDrawTimes = times
-        const { lottery_name } = await toDraw()
-        LOG_MSG.drawResult = lottery_name
-        EMAIL_MSG.drawStatus = `获奖结果：${lottery_name}\n`
-    } else {
-        LOG_MSG.freeDrawTimes = 0
-        EMAIL_MSG.drawStatus = '今日免费抽奖次数已用完'
-    }
-    const emailResult = await sendEmail(handleEmailMessage())
-    LOG_MSG.emailStatus = emailResult.messageId ? true : falseemailStatus = false
-    toLog()
-}
+}).listen(6600)
 
-const task = () => {
-    // 每天早上8点触发
-    const rule = new schedule.RecurrenceRule()
-    rule.hour = hour
-    rule.minute = minute
-    rule.second = second
-    schedule.scheduleJob(rule, main)
-}
-
-console.log('环境变量:')
-console.log('开启成功')
-// task()
+console.log(`服务启动成功\nlocal: http://localhost:6600/`)

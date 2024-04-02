@@ -15,6 +15,11 @@ export const getInfo = async (req) => {
             resolve(returnMsg('未查找到当前用户, 请重新登录', null, 403))
             return
         }
+        const { token } = userInfo
+        if (!token) {
+            resolve(returnMsg('请先设置掘金 Token', null, 405))
+            return
+        }
         // 查询是否已签到
         const isSigned = await checkIsSignedIn(userInfo.token)
         // 查询当前矿石数

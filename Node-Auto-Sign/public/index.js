@@ -1,22 +1,23 @@
 ;(function () {
 
-    const cookie = window.cookie
-    console.log(cookie)
+    const username = localStorage.getItem('watcher-auto-sign')
+    if (!username) {
+        toLogin()
+        return
+    } else {
+        // document.getElementById('')
+    }
 
     const CODE = {
         SUCCESS: 200,
         NOTFOUND: 400,
-        NOTLOGIN: 403
+        NOTLOGIN: 403,
+        NOTTOKEN: 405
     }
 
     // 静态变量
     const HEADERS = {
         'Content-Type': 'application/json'
-    }
-
-    function init () {
-        getInfo()
-        getLogs()
     }
 
     function getInfo () {
@@ -25,22 +26,49 @@
             headers: HEADERS,
             credentials: 'include'
         }).then(res => res.json()).then(res => {
-            const { code, data } = res
+            const { code, data, msg } = res
             if (code === CODE.SUCCESS) {
                 // 是否签到 & 剩余矿石数
                 const { isSigned, remianedPoint } = data || {}
                 const msg = isSigned === true ? '今日已签到' : (isSigned === false ? '今日未签到' : '登陆已过期')
                 document.getElementById('is-signed').innerHTML = msg
                 document.getElementById('remained-point').innerHTML = remianedPoint || 0
+                getLogs()
             } else if (code === CODE.NOTLOGIN) {
+                alert(msg)
                 toLogin()
+            } else if (code === CODE.NOTTOKEN) {
+                alert(msg)
             }
         })
     }
 
     function toLogin () {
-        document.cookie = ''
-        window.location.replace('/login.html')
+        location.replace('/login.html')
+    }
+
+    document.getElementById('tokenBtn').addEventListener('click', setToken)
+    function setToken () {
+        const $tokenDom = document.getElementById('token')
+        const token = $tokenDom.value.trim()
+        if (!token) {
+            alert('请输入Token')
+            return
+        }
+        fetch('/api/setToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Accept': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({ token })
+        }).then(res => res.json()).then(res => {
+            console.log(res)
+        }).catch(err => {
+            // alert(err)
+            console.log(err)
+        })
     }
 
     document.getElementById('start').addEventListener('click', startScript)
@@ -181,20 +209,6 @@
         })
     }
 
-    init()
+    getInfo()
     // getProcess()
 })()
-
-// fetch('/api/setCookie', {
-//     method: 'POST',
-//     headers: {
-//         'Content-Type': 'application/json;charset=utf-8',
-//         'Accept': 'application/json',
-//         'Access-Control-Allow-Origin': '*'
-//     },
-//     body: JSON.stringify({
-//         cookie: 'dadadjajwhqgejwqejq'
-//     })
-// }).then(res => {
-//     console.log(res)
-// })
