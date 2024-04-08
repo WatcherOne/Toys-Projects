@@ -46,6 +46,6 @@ http.createServer(async (req, res) => {
             }
         })
     }
-}).listen(6600)
+}).listen(6700)
 
-console.log(`服务启动成功\nlocal: http://localhost:6600/`)
+console.log(`服务启动成功\nlocal: http://localhost:6700/`)

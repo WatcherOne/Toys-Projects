@@ -1,9 +1,9 @@
 import fs from 'fs'
 import userList from '../config/token.js'
-import { getCurrentDate, getCurrentTime } from './utils.js'
-import { hour, minute, second } from './config.date.js'
-import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from './api.js'
-import { sendEmail } from './sendEmail.js'
+import { getCurrentDate, getCurrentTime } from '../utils/common.js'
+// import { hour, minute, second } from './config.date.js'
+import { checkIsSignedIn, toSignIn, toGetPointCount, checkIsFreeDraw, toDraw } from '../api/action.js'
+import { sendEmail } from '../email/index.js'
 import schedule from 'node-schedule'
 
 const EMAIL_MSG = {
@@ -23,8 +23,14 @@ const LOG_MSG = {
 }
 
 const username = process.argv[2] || ''
+const hour = process.argv[3] || '8'
+const minute = process.argv[4] || '0'
+const second = process.argv[5] || '0'
+console.log(username, hour, minute, second)
 const userInfo = userList[username] || {}
 const COOKIE = userInfo.token || ''
+
+// Todo 完善定时任务
 
 // 延迟去获取免费抽奖次数
 async function queryFreeTimes () {

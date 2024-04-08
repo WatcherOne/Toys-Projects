@@ -1,33 +1,24 @@
 import { checkIsSignedIn, toGetPointCount } from '../api/action.js'
-import { returnMsg, getCookie, getCurrentUser } from '../utils/common.js'
+import { returnMsg, checkIsLogin } from '../utils/common.js'
 
 // 首页获得基础信息
 export const getInfo = async (req) => {
     return new Promise(async resolve => {
-        const { cookie } = req.headers || {}
-        const { username, watcherToken } = getCookie(cookie)
-        if (!username || !watcherToken) {
-            resolve(returnMsg('登录用户已过期, 请重新登录', null, 403))
-            return
-        }
-        const userInfo = getCurrentUser(username, watcherToken)
-        if (!userInfo) {
-            resolve(returnMsg('未查找到当前用户, 请重新登录', null, 403))
-            return
-        }
+        const userInfo = checkIsLogin(req, resolve)
+        if (!userInfo) return
         const { token } = userInfo
         if (!token) {
-            resolve(returnMsg('请先设置掘金 Token', null, 405))
+            resolve(returnMsg('请先设置掘金 Token', null, 403))
             return
         }
         // 查询是否已签到
-        const isSigned = await checkIsSignedIn(userInfo.token)
+        const isSigned = await checkIsSignedIn(token)
         // 查询当前矿石数
-        const remianedPoint = await toGetPointCount(userInfo.token)
+        const remianedPoint = await toGetPointCount(token)
         if (typeof isSigned === 'object') {
-            resolve(returnMsg(isSigned.err_msg, null, isSigned.err_no))
+            resolve(returnMsg(`Token已过期, 请确认Token是否正确`, null, isSigned.err_no))
         } else if (typeof remianedPoint === 'object') {
-            resolve(returnMsg(remianedPoint.err_msg, null, remianedPoint.err_no))
+            resolve(returnMsg(`Token已过期, 请确认Token是否正确`, null, remianedPoint.err_no))
         } else {
             resolve(returnMsg('', { isSigned, remianedPoint }))
         }

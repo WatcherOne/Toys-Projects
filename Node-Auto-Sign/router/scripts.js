@@ -1,20 +1,15 @@
+import path from 'path'
 import { exec } from 'child_process'
-import { returnMsg, getCookie, getCurrentUser } from '../utils/common.js'
+import { returnMsg, checkIsLogin } from '../utils/common.js'
+
+const __dirname = path.resolve()
 
 // 开启脚本
 export const startScript = async (req) => {
     return new Promise(resolve => {
-        const { cookie } = req.headers || {}
-        const { username, watcherToken } = getCookie(cookie)
-        if (!username || !watcherToken) {
-            resolve(returnMsg('登录用户已过期, 请重新登录', null, 403))
-            return
-        }
-        const userInfo = getCurrentUser(username, watcherToken)
-        if (!userInfo) {
-            resolve(returnMsg('未查找到当前用户, 请重新登录', null, 403))
-            return
-        }
+        const userInfo = checkIsLogin(req, resolve)
+        if (!userInfo) return
+        const { username, hour = 8, minute = 0, second = 0 } = userInfo
         const commandName = `autoScript-${username}`
         exec(`pm2 show ${commandName}`, (error, stdout, stderr) => {
             if (error) {
@@ -24,7 +19,7 @@ export const startScript = async (req) => {
                     // 其他错误时
                     resolve(returnMsg(stderr, null, 500))
                 } else {
-                    exec(`pm2 start index.js --name ${commandName} -- zhubo`, (error2, stdout2, stderr2) => {
+                    exec(`pm2 start ${__dirname}/scripts/index.js --name ${commandName} -- ${username} ${hour} ${minute} ${second}`, (error2, stdout2, stderr2) => {
                         if (error2) {
                             resolve(returnMsg(stderr2, null, 500))
                         } else {
@@ -41,5 +36,23 @@ export const startScript = async (req) => {
 
 // 停止脚本
 export const stopScript = async (req) => {
-
+    return new Promise(resolve => {
+        const userInfo = checkIsLogin(req, resolve)
+        if (!userInfo) return
+        const { username } = userInfo
+        const commandName = `autoScript-${username}`
+        exec(`pm2 show ${commandName}`, (error, stdout, stderr) => {
+            if (error) {
+                resolve(returnMsg('脚本未启动', null, 500))
+            } else {
+                exec(`pm2 delete ${commandName}`, (error2, stdout2, stderr2) => {
+                    if (error2) {
+                        resolve(returnMsg(stderr2, null, 500))
+                    } else {
+                        resolve(returnMsg('停止成功', null, 200))
+                    }
+                })
+            }
+        })
+    })
 }

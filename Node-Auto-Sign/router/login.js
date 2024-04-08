@@ -5,7 +5,7 @@ import { checkUserIsExist, returnMsg } from '../utils/common.js'
 
 const __dirname = path.resolve()
 
-// 登陆接口 - 主要为了 设置 Token 与 Email 信息 - 开启一个全新的自动签到脚本
+// 登陆接口 - 主要为了 设置 Token 与 Email 信息 -- 新增 / 登陆一个用户
 export const login = async (req, res) => {
     return new Promise(resolve => {
         let loginForm = {}
@@ -33,7 +33,7 @@ export const login = async (req, res) => {
             await writeFileSync(fileName, fileContent)
             res.setHeader('Access-Control-Allow-Credentials', 'true')
             res.setHeader('Set-Cookie', [`username=${username}`, `watcherToken=${watcherToken}`])
-            // 用户名已存在时 => 会替换
+            // 用户名已存在时登陆 => 会重新生成Token
             resolve(returnMsg())
         })
     })
@@ -41,6 +41,7 @@ export const login = async (req, res) => {
 
 function handleLoginInfo (obj) {
     const { username, password, email } = obj
+    // 生成一个唯一 token 来标识不同用户, 暂时没有校验唯一性
     const watcherToken = randomNumber(11)
     userList[username] = { username, password, email, watcherToken: watcherToken }
     return {

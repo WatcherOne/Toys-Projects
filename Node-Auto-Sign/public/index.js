@@ -4,15 +4,14 @@
     if (!username) {
         toLogin()
         return
-    } else {
-        // document.getElementById('')
     }
 
     const CODE = {
         SUCCESS: 200,
         NOTFOUND: 400,
-        NOTLOGIN: 403,
-        NOTTOKEN: 405
+        NOTTOKEN: 403,
+        NOTLOGIN: 405,
+        ERROR: 500
     }
 
     // 静态变量
@@ -33,7 +32,9 @@
                 const msg = isSigned === true ? '今日已签到' : (isSigned === false ? '今日未签到' : '登陆已过期')
                 document.getElementById('is-signed').innerHTML = msg
                 document.getElementById('remained-point').innerHTML = remianedPoint || 0
+                getProcess()
                 getLogs()
+                getActivity()
             } else if (code === CODE.NOTLOGIN) {
                 alert(msg)
                 toLogin()
@@ -64,10 +65,15 @@
             },
             body: JSON.stringify({ token })
         }).then(res => res.json()).then(res => {
-            console.log(res)
+            const { code, msg } = res
+            if (code === CODE.SUCCESS) {
+                getInfo()
+            } else if (code === CODE.NOTLOGIN) {
+                alert(msg)
+                toLogin()
+            }
         }).catch(err => {
-            // alert(err)
-            console.log(err)
+            alert(err)
         })
     }
 
@@ -78,29 +84,22 @@
             headers: HEADERS,
             credentials: 'include'
         }).then(res =>  res.json()).then(res => {
-            const { code, data } = res
-            if (code === 200) {
-                alert('启动成功')
-                // getProcess()
-            } else {
-                alert(data)
-            }
+            const { code, msg } = res
+            code === CODE.SUCCESS && getProcess()
+            alert(msg)
         })
     }
 
     document.getElementById('stop').addEventListener('click', stopScript)
     function stopScript () {
-        fetch('/api/stop', {
+        fetch('/api/stopScript', {
             method: 'GET',
-            headers: HEADERS
+            headers: HEADERS,
+            credentials: 'include'
         }).then(res =>  res.json()).then(res => {
-            const { code, data } = res
-            if (code === 200) {
-                alert('停止成功')
-                getProcess()
-            } else {
-                alert(data)
-            }
+            const { code, msg } = res
+            code === CODE.SUCCESS && getProcess()
+            alert(msg)
         })
     }
     
@@ -108,8 +107,13 @@
         fetch('/api/getProcess', {
             method: 'GET',
             headers: HEADERS
-        }).then(res =>  res.json()).then(data => {
-            handleProcess(data.data || '')
+        }).then(res =>  res.json()).then(res => {
+            const { code, msg, data } = res
+            if (code === CODE.SUCCESS) {
+                handleProcess(data || '')
+            } else {
+                handleErrorProcess(msg)
+            }
         })
     }
 
@@ -137,6 +141,10 @@
         })
         $processDom.innerHTML = tr
     }
+    function handleErrorProcess (msg) {
+        // Todo - 增加进程未启动情况
+        console.log(msg)
+    }
 
     document.getElementById('update-log').addEventListener('click', getActivity)
     function getLogs () {
@@ -144,8 +152,13 @@
             method: 'GET',
             headers: HEADERS,
             credentials: 'include'
-        }).then(res => res.json()).then(data => {
-            handleLogs(data)
+        }).then(res => res.json()).then(res => {
+            const { code, msg, data } = res
+            if (code === CODE.SUCCESS) {
+                handleLogs(data)
+            } else {
+                alert(JSON.stringify(msg))
+            }
         })
     }
 
@@ -203,12 +216,12 @@
     function getActivity () {
         fetch('/api/getActivity', {
             method: 'POST',
-            headers: HEADERS
+            headers: HEADERS,
+            credentials: 'include'
         }).then(res => res.json()).then(res => {
             console.log(res)
         })
     }
 
     getInfo()
-    // getProcess()
 })()

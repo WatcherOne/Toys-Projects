@@ -1,28 +1,34 @@
 import path from 'path'
+import { open, close } from 'fs'
 import { readFile } from 'fs/promises'
-import { returnMsg, getCookie, getCurrentUser } from '../utils/common.js'
+import { returnMsg, checkIsLogin } from '../utils/common.js'
 
 const __dirname = path.resolve()
 
 // 获得日志文件内容
 export const getLogs = async (req) => {
     return new Promise(resolve => {
-        const { cookie } = req.headers || {}
-        const { username, watcherToken } = getCookie(cookie)
-        if (!username || !watcherToken) {
-            resolve(returnMsg('登录用户已过期, 请重新登录', null, 403))
-            return
-        }
-        const userInfo = getCurrentUser(username, watcherToken)
-        if (!userInfo) {
-            resolve(returnMsg('未查找到当前用户, 请重新登录', null, 403))
-            return
-        }
+        const userInfo = checkIsLogin(req, resolve)
+        if (!userInfo) return
+        const { username } = userInfo
         const fileName = `${__dirname}/logs/${username}.logs.txt`
-        readFile(fileName, 'utf-8').then(data => {
-            resolve(returnMsg('', data))
-        }).catch(err => {
-            resolve(returnMsg(err, null, 500))
+        // 创建文件
+        open(fileName, 'wx', (err, fd) => {
+            // 文件已存在
+            if (err) {
+                readFile(fileName, 'utf-8').then(data => {
+                    resolve(returnMsg('', data))
+                }).catch(err => {
+                    resolve(returnMsg(err, null, 500))
+                })
+                return
+            }
+            // 文件被创建
+            resolve(returnMsg('', ''))
+            close(fd, (err) => {
+                if (err) console.error(err)
+            })
         })
+        
     })
 }
