@@ -8,8 +8,8 @@ export const SENDER = {
 }
 
 export const RECIPIENT = {
-    // 从用户处获取
-    // USER: '286154864@qq.com',
+    // 由用户设置
+    // USER: '',
     SUBJECT: '掘金签到成功',
     DEFAULTMSG: `您于${new Date().toLocaleString()}, 在自动签到系统中签到成功`
 }

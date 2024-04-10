@@ -2,8 +2,6 @@ import axios from 'axios'
 import { HEADERS } from './config.js'
 import { isSignedIn, signIn, getPointCount, freeCheck, drawAPI, getActivityAPI } from './juejin.api.js'
 
-const headers = { ...HEADERS, cookie: '' }
-
 // 检测是否已签到
 export async function checkIsSignedIn (cookie) {
     const res = await axios({
@@ -19,11 +17,14 @@ export async function checkIsSignedIn (cookie) {
 }
 
 // 签到
-export async function toSignIn () {
+export async function toSignIn (cookie) {
     const res = await axios({
         url: signIn,
         method: 'post',
-        headers
+        headers: {
+            ...HEADERS,
+            cookie
+        }
     })
     // { data: true, err_msg: '' }
     return res && res.data
@@ -44,11 +45,14 @@ export async function toGetPointCount (cookie) {
 }
 
 // 检查是否能免费抽奖次数
-export async function checkIsFreeDraw () {
+export async function checkIsFreeDraw (cookie) {
     const res = await axios({
         url: freeCheck,
         method: 'get',
-        headers
+        headers: {
+            ...HEADERS,
+            cookie
+        }
     })
     return res && res.data && res.data.data && res.data.data.free_count
 }

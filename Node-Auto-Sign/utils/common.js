@@ -1,4 +1,8 @@
+import path from 'path'
+import { readFileSync } from 'fs'
 import userList from '../config/token.js'
+
+const __dirname = path.resolve()
 
 // 封装返回前端数据结构统一
 export const returnMsg = (msg = '成功', data = null, code = 200) => {
@@ -43,6 +47,8 @@ export const checkUserIsExist = (username) => {
 
 // 获得当前用户信息
 export const getCurrentUser = (username, watcherToken) => {
+    const result = readFileSync(`${__dirname}/config/token.js`, 'utf-8')
+    console.log(JSON.parse(result))
     const userInfo = userList[username]
     if (!userInfo) return null
     if (userInfo.watcherToken !== watcherToken) return null

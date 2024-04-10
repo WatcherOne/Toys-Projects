@@ -29,23 +29,29 @@ export const login = async (req, res) => {
                 return
             }
             const fileName = `${__dirname}/config/token.js`
-            const { info: fileContent, watcherToken } = handleLoginInfo(loginForm)
+            const { info: fileContent, watcherToken } = handleLoginInfo(userInfo, loginForm)
+            console.log('newToken', watcherToken)
             await writeFileSync(fileName, fileContent)
             res.setHeader('Access-Control-Allow-Credentials', 'true')
             res.setHeader('Set-Cookie', [`username=${username}`, `watcherToken=${watcherToken}`])
-            // 用户名已存在时登陆 => 会重新生成Token
+            // 用户名已存在时登陆 => 会重新生成watcherToken
             resolve(returnMsg())
         })
     })
 }
 
-function handleLoginInfo (obj) {
+function handleLoginInfo (originInfo, obj) {
     const { username, password, email } = obj
     // 生成一个唯一 token 来标识不同用户, 暂时没有校验唯一性
     const watcherToken = randomNumber(11)
-    userList[username] = { username, password, email, watcherToken: watcherToken }
+    const newUserList = JSON.parse(JSON.stringify(userList))
+    newUserList[username] = Object.assign({}, JSON.parse(JSON.stringify(originInfo)), {
+        username,
+        password,
+        watcherToken
+    }, email && { email })
     return {
-        info: `export default ${JSON.stringify(userList)}`,
+        info: `export default ${JSON.stringify(newUserList)}`,
         watcherToken
     }
 }

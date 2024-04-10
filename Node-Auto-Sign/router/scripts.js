@@ -9,7 +9,7 @@ export const startScript = async (req) => {
     return new Promise(resolve => {
         const userInfo = checkIsLogin(req, resolve)
         if (!userInfo) return
-        const { username, hour = 8, minute = 0, second = 0 } = userInfo
+        const { username } = userInfo
         const commandName = `autoScript-${username}`
         exec(`pm2 show ${commandName}`, (error, stdout, stderr) => {
             if (error) {
@@ -19,7 +19,7 @@ export const startScript = async (req) => {
                     // 其他错误时
                     resolve(returnMsg(stderr, null, 500))
                 } else {
-                    exec(`pm2 start ${__dirname}/scripts/index.js --name ${commandName} -- ${username} ${hour} ${minute} ${second}`, (error2, stdout2, stderr2) => {
+                    exec(`pm2 start ${__dirname}/scripts/index.js --name ${commandName} -- ${username}`, (error2, stdout2, stderr2) => {
                         if (error2) {
                             resolve(returnMsg(stderr2, null, 500))
                         } else {

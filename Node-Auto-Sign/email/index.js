@@ -11,10 +11,10 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-export const sendEmail = async (user, content = RECIPIENT.DEFAULTMSG) => {
+export const sendEmail = async (userEmail, content = RECIPIENT.DEFAULTMSG) => {
     return await transporter.sendMail({
         from: SENDER.USER,          // 发送邮件的地址
-        to: user,                   // 接收邮件的地址
+        to: userEmail,                   // 接收邮件的地址
         subject: RECIPIENT.SUBJECT, // 邮件标题
         text: content,              // 有 html，优先 html
         html: '',                   // html body

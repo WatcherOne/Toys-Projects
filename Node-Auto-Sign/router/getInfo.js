@@ -16,11 +16,11 @@ export const getInfo = async (req) => {
         // 查询当前矿石数
         const remianedPoint = await toGetPointCount(token)
         if (typeof isSigned === 'object') {
-            resolve(returnMsg(`Token已过期, 请确认Token是否正确`, null, isSigned.err_no))
+            resolve(returnMsg(`当前Token不可用, 请确认Token是否正确`, { token }, isSigned.err_no))
         } else if (typeof remianedPoint === 'object') {
-            resolve(returnMsg(`Token已过期, 请确认Token是否正确`, null, remianedPoint.err_no))
+            resolve(returnMsg(`当前Token不可用, 请确认Token是否正确`, { token }, remianedPoint.err_no))
         } else {
-            resolve(returnMsg('', { isSigned, remianedPoint }))
+            resolve(returnMsg('', { isSigned, remianedPoint, token }))
         }
     })
 }

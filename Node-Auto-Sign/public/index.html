@@ -7,33 +7,70 @@
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">
-            <textarea name="token" id="token" cols="30" rows="10"></textarea>
-        </div>
-        <div class="btns">
-            <div class="description">
-                <div id="is-signed"></div>
-                <div id="remained-point"></div>
-            </div>
-            <div class="btn-groups">
-                <!-- Todo: 做个防抖  -->
-                <button type="button" id="tokenBtn">设置Token</button>
-                <button type="button" id="start">开启</button>
-                <button type="button" id="stop">停止</button>
-            </div>
-        </div>
-        <div class="process">
-            <table id="process-content" class="content" border collapse></table>
-        </div>
-        <div class="logs">
-            <div class="log-top">
-                <div class="title">日志列表</div>
-                <div class="operate">
-                    <button type="button" id="update-log">更新</button>
+    <div class="container">
+        <div class="nav"></div>
+        <div class="wrapper">
+            <div class="aside">
+                <div class="author">
+                    <div class="avator"></div>
+                    <div class="username" id="username">未登录</div>
+                </div>
+                <div class="description first-desc">
+                    <div class="label">今日是否签到</div>
+                    <div id="is-signed"></div>
+                </div>
+                <div class="description">
+                    <div class="label">剩余矿石数量</div>
+                    <div id="remained-point">0</div>
+                </div>
+                <div class="footer">
+                    <button type="button" id="logout" class="cancel">登出</button>
+                    <button type="button" id="settings" class="primary">设置</button>
                 </div>
             </div>
-            <div id="log-list" class="log-list"></div>
+            <div class="content">
+                <div class="btn-group">
+                    <!-- Todo: 做个防抖  -->
+                    <button type="button" id="start" class="success">开启</button>
+                    <button type="button" id="stop" class="danger">停止</button>
+                </div>
+                <div class="process">
+                    <div class="section-top">
+                        <div class="title">脚本进程</div>
+                    </div>
+                    <table id="process-table" class="process-table" border collapse></table>
+                    <div id="process-no-data" class="process-no-data">暂无进程数据</div>
+                </div>
+                <div class="logs">
+                    <div class="section-top">
+                        <div class="title">日志列表</div>
+                        <div class="operate">
+                            <button type="button" id="update-log" class="primary">更新</button>
+                        </div>
+                    </div>
+                    <div id="log-list" class="log-list">暂无日志数据</div>
+                </div>
+                <div class="watermark-container" id="canvas">
+                    <div class="t-box">
+                        <div class="watermark" id="watermark"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        Copyright © 2024 watcher. All Rights Reserved.
+    </div>
+    <div class="mask hide" id="mask">
+        <div class="dialog-wrapper">
+            <div class="dialog-title">设置Token</div>
+            <div class="dialog-content">
+                <textarea name="token" id="token" rows="12" placeholder="请输入掘金Token" class="token"></textarea>
+            </div>
+            <div class="dialog-footer">
+                <button type="button" id="cancel" class="cancel">取消</button>
+                <button type="button" id="tokenSubmit" class="primary">确认</button>
+            </div>
         </div>
     </div>
 </body>
