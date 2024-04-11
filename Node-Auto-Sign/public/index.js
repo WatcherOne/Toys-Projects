@@ -38,6 +38,10 @@
         }).then(res => res.json()).then(res => {
             const { code, data, msg } = res
             const { token, email, hour, minute, second } = data || {}
+            $email && ($email.value = email || '')
+            $hour && ($hour.value = hour || '')
+            $minute && ($minute.value = minute || '')
+            $second && ($second.value = second || '')
             if (token) juejinToken = token
             if (code === CODE.SUCCESS) {
                 // 是否签到 & 剩余矿石数
@@ -45,10 +49,6 @@
                 const msg = isSigned === true ? '已签到' : (isSigned === false ? '未签到' : 'Token已过期')
                 document.getElementById('is-signed').innerHTML = msg
                 document.getElementById('remained-point').innerHTML = remianedPoint || 0
-                $email && ($email.value = email)
-                $hour && ($hour.value = hour)
-                $minute && ($minute.value = minute)
-                $second && ($second.value = second)
                 getProcess()
                 getLogs()
                 getActivity()

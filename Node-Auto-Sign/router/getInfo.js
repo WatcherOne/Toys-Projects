@@ -8,7 +8,7 @@ export const getInfo = async (req) => {
         if (!userInfo) return
         const { token, email, hour, minute, second } = userInfo
         if (!token) {
-            resolve(returnMsg('请先设置掘金 Token', null, 403))
+            resolve(returnMsg('请先设置掘金 Token', { email }, 403))
             return
         }
         // 查询是否已签到
