@@ -30,7 +30,6 @@ export const login = async (req, res) => {
             }
             const fileName = `${__dirname}/config/token.js`
             const { info: fileContent, watcherToken } = handleLoginInfo(userInfo, loginForm)
-            console.log('newToken', watcherToken)
             await writeFileSync(fileName, fileContent)
             res.setHeader('Access-Control-Allow-Credentials', 'true')
             res.setHeader('Set-Cookie', [`username=${username}`, `watcherToken=${watcherToken}`])

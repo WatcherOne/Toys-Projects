@@ -62,8 +62,3 @@
     - 查看进程日志：pm2 logs
     - 查看指定进程：pm2 logs [name] / [ID]
     - 查看进程信息：pm2 show [name] / [ID]
-
-// Todo:
-// 删除 watcherToken 试试
-// 回车: 密码+邮箱登录
-// 设置时间自定义 + 邮箱

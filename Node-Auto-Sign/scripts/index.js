@@ -57,9 +57,8 @@ async function main () {
         return
     }
     const isSignedObj = await checkIsSignedIn(COOKIE)
-    console.log('isSignedObj', isSignedObj)
     if (isSignedObj) {
-        const { err_no, err_msg } =isSignedObj
+        const { err_no, err_msg } = isSignedObj
         if (err_no ===  403 || err_msg === 'must login') {
             LOG_MSG.error = '当前Token登录失败, 请重新设置正确的Token'
             toLog()
@@ -93,8 +92,12 @@ async function main () {
         EMAIL_MSG.drawStatus = '今日免费抽奖次数已用完'
     }
     if (email) {
-        const emailResult = await sendEmail(email, handleEmailMessage())
-        LOG_MSG.emailStatus = emailResult.messageId ? true : false
+        try {
+            const emailResult = await sendEmail(email, handleEmailMessage())
+            LOG_MSG.emailStatus = emailResult.messageId ? true : false
+        } catch {
+            LOG_MSG.emailStatus = false
+        }
     }
     toLog()
 }
@@ -108,6 +111,4 @@ const task = () => {
     schedule.scheduleJob(rule, main)
 }
 
-console.log('-------------')
-// task()
-main()
+task()

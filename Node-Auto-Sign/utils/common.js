@@ -1,6 +1,5 @@
 import path from 'path'
 import { readFileSync } from 'fs'
-import userList from '../config/token.js'
 
 const __dirname = path.resolve()
 
@@ -29,12 +28,12 @@ export const checkIsLogin = (req, resolve) => {
     const { cookie } = req.headers || {}
     const { username, watcherToken } = getCookie(cookie)
     if (!username || !watcherToken) {
-        resolve(returnMsg('登录用户已过期, 请重新登录', null, 403))
+        resolve(returnMsg('登录用户已过期, 请重新登录', null, 405))
         return false
     }
     const userInfo = getCurrentUser(username, watcherToken)
     if (!userInfo) {
-        resolve(returnMsg('未查找到当前用户, 请重新登录', null, 403))
+        resolve(returnMsg('未查找到当前用户, 请重新登录', null, 405))
         return false
     }
     return userInfo
@@ -42,16 +41,26 @@ export const checkIsLogin = (req, resolve) => {
 
 // 验证用户是否存在
 export const checkUserIsExist = (username) => {
-    return userList[username]
+    return getRealUserInfo(username)
 }
 
 // 获得当前用户信息
 export const getCurrentUser = (username, watcherToken) => {
-    const result = readFileSync(`${__dirname}/config/token.js`, 'utf-8')
-    console.log(JSON.parse(result))
-    const userInfo = userList[username]
+    const userInfo = getRealUserInfo(username)
     if (!userInfo) return null
     if (userInfo.watcherToken !== watcherToken) return null
+    return userInfo
+}
+
+// 实时获得用户Token
+export const getRealUserInfo = (username) => {
+    const result = readFileSync(`${__dirname}/config/token.js`, 'utf-8')
+    if (!result) return null
+    if (!result.includes(username)) return null
+    const resultArr = result.split(`"${username}":`)
+    if (resultArr.length === 1) return null
+    const infoArr = resultArr[1].split(`}`)[0]
+    const userInfo = new Function(`return ${infoArr}}`)()
     return userInfo
 }
 

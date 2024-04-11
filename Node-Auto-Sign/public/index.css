@@ -9,6 +9,10 @@ html, body {
     background-color: rgb(245, 247, 250);
 }
 
+a {
+    text-decoration: none;
+}
+
 button {
     outline: none;
     border: none;
@@ -101,7 +105,11 @@ button.success:hover {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background-color: #909090;
+    background-color: rgba(218, 221, 226, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dotted #007ad8
 }
 
 .aside .author .username {
@@ -151,6 +159,7 @@ button.success:hover {
     padding: 15px;
     box-sizing: border-box;
     position: relative;
+    overflow: auto;
 }
 
 .content .btn-group {
@@ -262,6 +271,93 @@ button.success:hover {
     color: rgb(62, 174, 211);
 }
 
+.content .activity {
+    width: 100%;
+    border: 1px solid var(--border-gap);
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+.content .activity .activity-list {
+    padding: 15px;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    background-color: white;
+    /* max-height: 300px; */
+    overflow: auto;
+}
+
+.activity-list .activity-content {
+    margin-bottom: 20px;
+}
+
+.activity-list .activity-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    min-height: 40px;
+    box-sizing: border-box;
+}
+.activity-list .activity-item:last-child {
+    border-bottom: 1px solid #dedede;
+}
+
+.activity-list .activity-no-data {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #666;
+    border: 1px solid #dedede;
+    margin-bottom: 15px;
+}
+
+.activity-list .activity-item .banner {
+    width: 150px;
+    height: 80px;
+    border: 1px solid #dedede;
+    border-bottom: 0;
+}
+
+
+.activity-list .activity-item .banner img {
+    width: 100%;
+    height: 100%;
+}
+
+.activity-list .activity-item .detail {
+    flex: 1;
+    border: 1px solid #dedede;
+    border-bottom: 0;
+    border-left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 5px 5px 10px;
+    box-sizing: border-box;
+}
+
+.activity-list .activity-item .detail .title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.activity-list .activity-item .detail .title .real {
+    font-size: 14px;
+    color: chocolate;
+    font-weight: bold;
+}
+
+.activity-list .activity-item .detail .title .limit {
+    font-size: 14px;
+    color: #67c23a;
+}
+
+.activity-list .activity-item .detail .desc {
+    color: #666;
+    font-size: 14px;
+}
+
 .mask {
     position: fixed;
     top: 0;
@@ -276,7 +372,7 @@ button.success:hover {
 .mask .dialog-wrapper {
     width: 600px;
     position: relative;
-    top: calc(50% - 170px);
+    top: calc(50% - 260px);
     margin: 0 auto;
     background-color: white;
     border-radius: 8px;
@@ -297,6 +393,48 @@ button.success:hover {
 .mask .dialog-wrapper .dialog-content .token {
     width: 100%;
     resize: none;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.mask .dialog-wrapper .dialog-content .form-item {
+    display: flex;
+    align-items: center;
+    line-height: 30px;
+    margin-top: 10px;
+}
+
+.dialog-content .form-item .form-label {
+    font-size: 14px;
+    color: #666;
+    margin-right: 10px;
+}
+
+.dialog-content .form-item .dialog-input {
+    height: 30px;
+    padding: 5px;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.dialog-content .form-item .group {
+    display: flex;
+    justify-content: space-between;
+    flex: 1
+}
+
+.dialog-content .form-tips {
+    margin-top: 15px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #777;
+    background-color: lightblue;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.dialog-content .form-tips .important {
+    color: rgb(231, 109, 129);
 }
 
 .mask .dialog-wrapper .dialog-footer {

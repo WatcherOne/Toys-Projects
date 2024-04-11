@@ -37,7 +37,7 @@
             credentials: 'include'
         }).then(res => res.json()).then(res => {
             const { code, data, msg } = res
-            const { token } = data || {}
+            const { token, email, hour, minute, second } = data || {}
             if (token) juejinToken = token
             if (code === CODE.SUCCESS) {
                 // 是否签到 & 剩余矿石数
@@ -45,6 +45,10 @@
                 const msg = isSigned === true ? '已签到' : (isSigned === false ? '未签到' : 'Token已过期')
                 document.getElementById('is-signed').innerHTML = msg
                 document.getElementById('remained-point').innerHTML = remianedPoint || 0
+                $email && ($email.value = email)
+                $hour && ($hour.value = hour)
+                $minute && ($minute.value = minute)
+                $second && ($second.value = second)
                 getProcess()
                 getLogs()
                 getActivity()
@@ -62,8 +66,12 @@
         location.replace('/login.html')
     }
 
+    const $tokenDom = document.getElementById('token')
+    const $email = document.getElementById('dialog-email')
+    const $hour = document.getElementById('dialog-hour')
+    const $minute = document.getElementById('dialog-minute')
+    const $second = document.getElementById('dialog-second')
     document.getElementById('settings').addEventListener('click', () => {
-        const $tokenDom = document.getElementById('token')
         $tokenDom && ($tokenDom.value = juejinToken)
         showElement('mask')
     })
@@ -71,12 +79,18 @@
 
     document.getElementById('tokenSubmit').addEventListener('click', setToken)
     function setToken () {
-        const $tokenDom = document.getElementById('token')
+        const email = $email.value.trim()
         const token = $tokenDom.value.trim()
         if (!token) {
             alert('请输入Token')
             return
         }
+        let hour = $hour.value
+        let minute = $minute.value
+        let second = $second.value
+        hour = setRange(hour)
+        minute = setRange(minute)
+        second = setRange(second)
         fetch('/api/setToken', {
             method: 'POST',
             headers: {
@@ -84,11 +98,13 @@
                 'Accept': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({ token })
+            body: JSON.stringify({ token, email, hour, minute, second })
         }).then(res => res.json()).then(res => {
             const { code, msg } = res
             if (code === CODE.SUCCESS) {
                 getInfo()
+                hideElement('mask')
+                alert('设置成功, 请重启脚本来执行新的配置')
             } else if (code === CODE.NOTLOGIN) {
                 alert(msg)
                 toLogin()
@@ -96,10 +112,11 @@
         }).catch(err => {
             alert(err)
         })
-        // .finally(() => {
-        //     // 先存进去
-        //     juejinToken = token
-        // })
+    }
+    function setRange (value) {
+        value = Math.max(0, value)
+        value = Math.min(24, value)
+        return value
     }
 
     document.getElementById('start').addEventListener('click', startScript)
@@ -215,7 +232,7 @@
             })
             appendLogToHtml(logList.reverse())
         } catch (error) {
-            console.log('error: ', error)
+            alert(error)
         }
     }
 
@@ -254,14 +271,63 @@
         }
     }
 
+    const $activityList = document.getElementById('activity-content')
+    document.getElementById('update-activity').addEventListener('click', getActivity)
     function getActivity () {
         fetch('/api/getActivity', {
             method: 'POST',
             headers: HEADERS,
             credentials: 'include'
         }).then(res => res.json()).then(res => {
-            console.log(res)
+            const { code, msg, data } = res
+            if (code === CODE.SUCCESS) {
+                if (data) {
+                    handleActivity(data)
+                } else {
+                    $activityList.innerHTML = '暂无活动数据'
+                }
+            } else {
+                alert(JSON.stringify(msg))
+            }
         })
+    }
+    function handleActivity (data) {
+        const { running_competitions, history_competitions } = data || {}
+        const runningList = handleActivityList(running_competitions, true)
+        const historyList = handleActivityList(history_competitions)
+        $activityList.innerHTML = (runningList || historyList) ? (runningList + historyList) : '暂无活动数据'
+    }
+    function handleActivityList (list, real = false) {
+        let result = ''
+        if (list.length === 0) return ''
+        list.map(item => {
+            const { banner_info, title, description, sponsor_link, path_name, register_begin_time, result_publish_time } = item
+            const bannerInfo = banner_info ? JSON.parse(banner_info) : {}
+            const bannerCover = bannerInfo.banners?.detail_page_web?.banner_cover
+            const bannerImg = bannerCover?.image?.url
+            const startTime = getDate(register_begin_time)
+            const endTime = getDate(result_publish_time)
+            result += `<div class="activity-item">
+                <div class="banner">
+                    <img src="${bannerImg}" alt="banner-img" />
+                </div>
+                <div class="detail">
+                    <div class="title">
+                        <a href="${sponsor_link + path_name}" target="_blank">${title}</a>
+                        ${
+                            real
+                            ? `<span class="real">正在进行中</span>`
+                            : `<span class="limit">${startTime} ~ ${endTime}</span>`
+                        }
+                    </div>
+                    <div class="desc">${description}</div>
+                </div>
+            </div>`
+        })
+        return result
+    }
+    function getDate (time) {
+        return new Date(time * 1000).toLocaleDateString()
     }
 
     function setWaterMark (option = {}) {

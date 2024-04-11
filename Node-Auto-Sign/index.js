@@ -29,7 +29,7 @@ http.createServer(async (req, res) => {
             case '.png': contentType = 'image/png'; break;
             case '.jpg':
             case '.jpeg': contentType = 'image/jpeg'; break;
-            // '.ico' Todo: /favicon.ico
+            case '.ico': contentType = 'image/x-icon'; break;
         }
         readFile(`${__dirname}/public${url}`).then(content => {
             res.writeHead(200, { 'Content-Type': contentType })

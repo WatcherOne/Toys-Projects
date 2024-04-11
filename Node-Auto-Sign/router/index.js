@@ -1,6 +1,5 @@
 import { login } from './login.js'
 import { setToken } from './setToken.js'
-import { setTime } from './setTime.js'
 import { getInfo } from './getInfo.js'
 import { getLogs } from './getLogs.js'
 import { getProcess } from './getProcess.js'
@@ -14,7 +13,6 @@ export default async (req, res) => {
     switch (url) {
         case '/api/login': return login(req, res);
         case '/api/setToken': return setToken(req);
-        case '/api/setTime': return setTime(req);
         case '/api/getInfo': return getInfo(req);
         case '/api/getLogs': return getLogs(req);
         case '/api/getProcess': return getProcess(req);

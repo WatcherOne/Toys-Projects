@@ -3,10 +3,19 @@
 
         const $username = document.getElementById('username')
         const $password = document.getElementById('password')
-        const $loginBtn = document.getElementById('login')
         const $email = document.getElementById('email')
+        const $loginBtn = document.getElementById('login')
 
         $loginBtn.addEventListener('click', submit)
+
+        $password.addEventListener('keypress', keyPressSubmit)
+        $email.addEventListener('keypress', keyPressSubmit)
+
+        function keyPressSubmit (e) {
+            if (e.keyCode === 13) {
+                submit(e)
+            }
+        }
 
         function submit (e) {
             e.preventDefault()
