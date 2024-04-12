@@ -1,0 +1,172 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    --primary-text-color: #333;
+}
+
+.container {
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* height: 100%; */
+    flex-wrap: wrap;
+    padding: 20px 0 0 20px;
+    box-sizing: border-box;
+}
+
+.canvas-box {
+    border: 1px solid #dedede;
+    margin-right: 20px;
+}
+
+.extra-info {
+    margin-top: 5px;
+}
+
+.description .title, .level .title, .score-box .title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.description .desc {
+    counter-reset: order;
+    margin-bottom: 10px;
+}
+
+.description .desc div {
+    font-size: 15px;
+    color: var(--primary-text-color);
+    line-height: 21px;
+}
+
+.description .desc div::before {
+    counter-increment: order;
+    content: counter(order);
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+.level {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+}
+
+.level .title {
+    margin-bottom: 0;
+}
+
+.level .level-radio {
+    font-size: 15px;
+    color: var(--primary-text-color);
+}
+
+.level .level-radio input {
+    margin: -1px 0 0 10px;
+    vertical-align: middle;
+}
+
+.level .level-radio label {
+    cursor: pointer;
+}
+
+.score-box {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 10px;
+}
+
+.score-box .title {
+    margin-bottom: 0;
+}
+
+.score-box .score {
+    font-size: 18px;
+    font-weight: bold;
+    color: lightseagreen;
+    margin-left: 10px;
+}
+
+.bottom-operate button {
+    padding: 2px 15px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.special-event {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 15px;
+    color: lightskyblue;
+}
+
+.special-event .title {
+    font-weight: bold;
+}
+
+.special-event .warning {
+    color: goldenrod;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+.game-over-layer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .3);
+    overflow: auto;
+}
+
+.game-over-box {
+    position: fixed;
+    top: 0;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    z-index: 1002;
+    width: 280px;
+    height: 150px;
+    margin: auto;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    border: 1px solid #dedede;
+    border-radius: 5px;
+    background-color: #DDEDFD;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.game-over-box .score #game-score {
+    color: lightseagreen;
+}
+
+.game-over-box .btn {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.game-over-box .btn button {
+    padding: 5px 20px;
+    cursor: pointer;
+}

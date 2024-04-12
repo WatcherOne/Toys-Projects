@@ -1,9 +1,9 @@
 {
-    "name": "Tools-Plugins",
+    "name": "Toys-Projects",
     "version": "1.0.0",
     "description": "interesting project for some tools or plugins",
     "type": "module",
-    "keywords": ["tools", "plugins", "node"],
+    "keywords": ["tools", "projects", "node", "javascript", "canvas"],
     "author": "watcher",
     "license": "ISC"
 }

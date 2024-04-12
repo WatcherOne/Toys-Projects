@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greedy-Snake</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <canvas id="canvas" width="400" height="400" class="canvas-box"></canvas>
+        <div class="extra-info">
+            <div class="description">
+                <div class="title">游戏说明：</div>
+                <div class="desc">
+                    <div>使用键盘上下左右键（或者WSAD键）来控制蛇的移动方向</div>
+                    <div>移动蛇来寻找食物，每吃一口就得一定的积分，同时蛇会越来越长</div>
+                    <div>不能碰墙，不能咬到自己的身子，更不能咬到自己的尾巴</div>
+                    <div>下方单选框可以选择游戏难度等级</div>
+                </div>
+                <div class="title">操作说明：</div>
+                <div class="desc">
+                    <div>点击《开始/继续》即开始游戏</div>
+                    <div>点击《暂停》即暂停游戏</div>
+                    <div>点击《开始/继续》即继续游戏</div>
+                    <div>点击《重新开始》即重新开始游戏</div>
+                    <div>按键"C"：开始或继续游戏</div>
+                    <div>按键"P"：暂停游戏</div>
+                    <div>按键"R"：重新开始游戏</div>
+                </div>
+            </div>
+            <div class="level">
+                <div class="title">难度等级：</div>
+                <div class="level-radio">
+                    <input type="radio" name="level" checked value="simplyMode" id="level-1" />
+                    <label for="level-1">简单</label>
+                </div>
+                <div class="level-radio">
+                    <input type="radio" name="level" value="middleMode" id="level-2" />
+                    <label for="level-2">中级</label>
+                </div>
+                <div class="level-radio">
+                    <input type="radio" name="level" value="hardMode" id="level-3" />
+                    <label for="level-3">困难</label>
+                </div>
+            </div>
+            <div class="score-box">
+                <div class="title">当前得分：</div>
+                <div id="score" class="score">0</div>
+            </div>
+            <div class="bottom-operate">
+                <button type="button" id="start">开始/继续</button>
+                <button type="button" id="stop">暂停</button>
+                <button type="button" id="restart">重新开始</button>
+            </div>
+        </div>
+    </div>
+    <div id="special-box" class="special-event hidden">
+        <span class="title">触发随机事件：</span>
+        <span class="warning">!</span>
+        <span id="special-text"></span>
+    </div>
+    <div id="game-over-layer" class="game-over-layer hidden">
+        <div class="game-over-box">
+            <div class="title">游戏结束!</div>
+            <div class="score">你的最终得分为：<span id="game-score">0</span> 分</div>
+            <div class="btn">
+                <button type="button" id="again">再来一把</button>
+                <button type="button" id="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./surprise.js"></script>
+<script src="./index.js"></script>
+</html>
