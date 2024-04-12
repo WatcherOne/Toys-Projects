@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./favicon.ico?v=988" type="image/x-icon">
+    <title>五十音假名识别</title>
+    <link rel="stylesheet" href="./common.css">
+    <link rel="stylesheet" href="./index.css">
+    <script src="./iconfont.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部有鼓励人心的话 -->
+        <div class="top-tips">
+            <div id="tips" class="tips-content"></div>
+        </div>
+        <div id="box" class="list-box"></div>
+        <div class="operate-btns">
+            <div onclick="openMask()" class="button primary">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-expend"></use>
+                </svg>
+            </div>
+            <div onclick="handleSelectKana()" class="button kana-li select" data-value="hiragana">平假名</div>
+            <div onclick="handleSelectKana()" class="button kana-li" data-value="katakana">片假名</div>
+            <div onclick="handleClear()" class="button danger">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-clear"></use>
+                </svg>
+            </div>
+            <div onclick="handleReset()" class="button primary">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-reset"></use>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div onclick="closeMask()" id="mask-overlay" class="mask hide">
+        <div class="mask-content">
+            <div onclick="handleSelectRow()" id="type-list" class="type-list">
+                <div class="item select" data-value="a">あ行</div>
+                <div class="item" data-value="ka">か行</div>
+                <div class="item" data-value="sa">さ行</div>
+                <div class="item" data-value="ta">た行</div>
+                <div class="item" data-value="na">な行</div>
+                <div class="item" data-value="ha">は行</div>
+                <div class="item" data-value="ma">ま行</div>
+                <div class="item" data-value="ya">や行</div>
+                <div class="item" data-value="ra">ら行</div>
+                <div class="item" data-value="wa">わ行</div>
+                <div class="item" data-value="ga">が行</div>
+                <div class="item" data-value="za">ざ行</div>
+                <div class="item" data-value="da">だ行</div>
+                <div class="item" data-value="ba">ば行</div>
+                <div class="item" data-value="pa">ぱ行</div>
+            </div>
+            <div onclick="confirmSelectRow()" class="type-submit">
+                <div class="confirm">确认</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./kana-list.js"></script>
+<script src="./common.js"></script>
+<script src="./index.js"></script>
+</html>

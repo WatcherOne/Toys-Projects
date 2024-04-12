@@ -1,0 +1,164 @@
+.mask-content {
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    z-index: 102;
+    background-color: #f8f8f8;
+    transform: translateX(-100%);
+    animation: mask-show .3s linear forwards;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 10px;
+    box-sizing: border-box;
+}
+
+.type-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.type-list .item {
+    text-align: center;
+    padding: 5px 20px;
+    margin-bottom: 5px;
+    border: 1px solid #dadde6;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.type-list .item.select {
+    color: white;
+    border-color: #7ab975;
+    background-color: #7ab975;
+}
+
+.type-submit .confirm {
+    text-align: center;
+    padding: 5px 30px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    box-shadow: 1px 1px 5px rgba(59, 59, 51, 0.5);
+    background-color: #0367a6;
+    background-image: linear-gradient(90deg, #0367a6 0%, #008997 74%);
+    font-size: 14px;
+}
+
+.operate-btns {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.operate-btns .button {
+    padding: 8px 15px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: 1px solid #36945F;
+    box-sizing: border-box;
+    color: #666;
+    border-color: #dedede;
+    background-color: rgb(243, 243, 243);
+    box-shadow: 1px 1px 5px rgba(243, 243, 243, 0.5);
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.operate-btns .button.select {
+    color: rgb(245, 240, 240);
+    background-color: rgb(54, 148, 95);
+    box-shadow: 1px 1px 5px rgba(54, 148, 95, 0.5);
+    border-color: #36945F;
+}
+
+.operate-btns .button.primary {
+    color: white;
+    background-color: #008997;
+    border-color: #008997;
+}
+
+.operate-btns .button.danger {
+    color: white;
+    background-color: #e03838;
+    border-color: #e03838;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    position: relative;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+.container .top-tips {
+    width: calc(100% - 40px);
+    margin: 0 20px 0;
+    overflow: hidden;
+}
+
+@keyframes wordsLoop {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.container .top-tips .tips-content {
+    height: 22px;
+    line-height: 22px;
+    font-size: 16px;
+    color: burlywood;
+    white-space: nowrap;
+    animation: wordsLoop 10s linear infinite normal;
+}
+
+.container .list-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 10px 0;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.container .list-box.center {
+    justify-content: center;
+}
+
+.container .list-box .word-row {
+    padding: 10px 20px;
+    border-bottom: 1px solid #dedede;
+}
+
+.container .list-box .word-row .serial {
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+    margin-right: 15px;
+    color: rgb(54, 148, 95);
+}
+
+.container .list-box .word-row .word-item {
+    margin-right: 15px;
+}

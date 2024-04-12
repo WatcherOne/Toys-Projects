@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./favicon.ico?v=988" type="image/x-icon">
+    <title>五十音听力测试</title>
+    <link rel="stylesheet" href="./common.css">
+    <link rel="stylesheet" href="./listen.css">
+</head>
+<body>
+    <audio id="audio" src="./listen.m4a" preload>
+        您的浏览器不支持 audio 元素
+    </audio>
+    <div class="wrapper">
+        <div class="content-box">
+            <span class="js-romanic show-pin"></span>
+            <div class="text-box hiragana">
+                <span class="js-hiragana show-text"></span>
+            </div>
+            <div class="text-box katakana">
+                <span class="js-katakana show-text"></span>
+            </div>
+        </div>
+        <div class="progress">
+            <div class="current-progress">
+                <div id="js-percent" class="progress-percent"></div>
+            </div>
+            <div class="js-done done-text">0</div>
+            <div id="js-total">/51</div>
+        </div>
+        <div class="group-btns">
+            <button type="button" onclick="playBefore()" class="button">上一个</button>
+            <button type="button" onclick="control()" class="js-play button">播放</button>
+            <button type="button" onclick="playAfter()" class="button">下一个</button>
+        </div>
+        <div class="bottom-origin">
+            <button type="button" class="button empty"></button>
+            <button type="button" onclick="handleResetSort()" class="button reset">随机重置</button>
+            <button type="button" onclick="handleFullPlay()" class="button primary">顺序播放</button>
+        </div>
+    </div>
+</body>
+<script src="./kana-list.js"></script>
+<script src="./listen.js"></script>
+</html>
