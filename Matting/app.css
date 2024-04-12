@@ -1,0 +1,81 @@
+.wrapper {
+    padding: 5% 5% 0 10%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.wrapper .operation-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.operation-wrapper .color-input {
+    width: 140px;
+    line-height: 28px;
+    outline: none;
+    border: 1px solid rgb(136, 189, 207);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.operation-wrapper .range-input {
+    width: 140px;
+    line-height: 28px;
+    outline: none;
+    border: 1px solid rgb(136, 189, 207);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.operation-wrapper .button {
+    width: 140px;
+    font-size: 16px;
+    text-align: center;
+    color: rgb(241, 240, 240);
+    background-color: rgb(136, 189, 207);
+    padding: 6px 0;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.operation-wrapper .button:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 1px 3px rgba(34, 25, 25, .2);
+}
+
+.operation-wrapper .upload-button {
+    background-color: rgb(78, 119, 182);
+}
+
+.operation-wrapper .down-button {
+    background-color: rgb(101, 190, 101);
+}
+
+.operation-wrapper .reset-button {
+    background-color: rgb(114, 119, 138);
+    margin-top: 10px;
+}
+
+.result-box {
+    border: 2px solid #dedede;
+    /* Todo: 调大一点画布框 */
+    width: 500px;
+    height: 460px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-image: url('./images/tranback.png');
+    background-repeat: repeat;
+}

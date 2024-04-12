@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抠图</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="operation-wrapper">
+            <!-- Todo：换成颜色选择器 -->
+            <!-- Todo：橡皮擦抠图 -->
+            <!-- Todo：高质量的图片资源 -->
+            <button type="button" onclick="upload()" class="button upload-button">上传文件</button>
+            <input type="file" onchange="afterUpload()" hidden id="js-upload">
+            <input type="text" id="js-remove-color" placeholder="RGB: 255,255,255" class="color-input">
+            <input type="text" id="js-range" value="0.2" placeholder="请输入容差" class="range-input">
+            <button type="button" onclick="pureMatting()" class="button">纯色抠图</button>
+            <button type="button" onclick="boundaryMatting()" class="button">边界抠图</button>
+            <!-- <button type="button" onclick="exchange()" class="button">精准抠图</button> -->
+            <button type="button" onclick="reset()" class="button reset-button">撤销</button>
+            <button type="button" onclick="downloadImg()" class="button down-button">下载</button>
+        </div>
+        <div class="result-box">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    
+</body>
+<script src="app.js"></script>
+</html>

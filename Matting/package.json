@@ -1,0 +1,23 @@
+{
+  "name": "matting",
+  "version": "1.0.0",
+  "description": "a matting system for web",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/WatcherOne/Matting.git"
+  },
+  "keywords": [
+    "matting",
+    "canvas"
+  ],
+  "author": "watcher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WatcherOne/Matting/issues"
+  },
+  "homepage": "https://github.com/WatcherOne/Matting#readme"
+}
